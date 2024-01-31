@@ -132,11 +132,12 @@ namespace Seq2Sheet
             int columnCount = (int)Math.Floor(Math.Sqrt(imageCount));
             int rowCount = (int)Math.Ceiling((double)imageCount / columnCount);
 
-            int columnPixels = columnCount * imageWidth;
+            /*int columnPixels = columnCount * imageWidth;
             int rowPixels = rowCount * imageHeight;
             int pixelDifference, shift;
 
             //MessageBox.Show($"{columnPixels}x{rowPixels}");
+            MessageBox.Show($"{columnCount}x{rowCount}");
 
             if(columnPixels > rowPixels)
             {
@@ -154,6 +155,8 @@ namespace Seq2Sheet
                 //MessageBox.Show($"< {shift} : {pixelDifference}");
             }
 
+            MessageBox.Show($"{columnCount}x{rowCount}");*/
+
             int spritesheetWidth = columnCount * imageWidth;
             int spritesheetHeight = rowCount * imageHeight;
 
@@ -161,16 +164,22 @@ namespace Seq2Sheet
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
+                int column = 0;
+                int row = 0;
                 for (int i = 0; i < imageCount; i++)
                 {
-                    int column = i % columnCount;
-                    int row = i / columnCount;
+                    if (column == columnCount)
+                    {
+                        column = 0;
+                        row++;
+                    }
 
                     int x = column * imageWidth;
                     int y = row * imageHeight;
 
                     // Assuming images is an array of Image objects
                     g.DrawImage(images[i], new Rectangle(x, y, imageWidth, imageHeight));
+                    column++;
                 }
             }
 

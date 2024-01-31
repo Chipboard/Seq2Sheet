@@ -6,9 +6,9 @@ namespace Seq2Sheet
 {
     internal static partial class Program
     {
-        static SeqForm form = new SeqForm();
-        static string[] imagePaths = new string[0];
-        static Image[] images = new Image[0];
+        static SeqForm form = new();
+        static string[] imagePaths;
+        static Image[] images;
 
         static int imageWidth, imageHeight;
         static int averageCropX, averageCropY;
@@ -131,6 +131,28 @@ namespace Seq2Sheet
             // Calculate the column count and row count for a square-ish distribution
             int columnCount = (int)Math.Floor(Math.Sqrt(imageCount));
             int rowCount = (int)Math.Ceiling((double)imageCount / columnCount);
+
+            int columnPixels = columnCount * imageWidth;
+            int rowPixels = rowCount * imageHeight;
+            int pixelDifference, shift;
+
+            //MessageBox.Show($"{columnPixels}x{rowPixels}");
+
+            if(columnPixels > rowPixels)
+            {
+                pixelDifference = columnPixels - rowPixels;
+                shift = pixelDifference / imageWidth;
+                columnCount -= shift;
+                rowCount += shift;
+                //MessageBox.Show($"> {shift} : {pixelDifference}");
+            } else if(rowPixels > columnPixels)
+            {
+                pixelDifference = rowPixels - columnPixels;
+                shift = pixelDifference / imageHeight;
+                columnCount += shift;
+                rowCount -= shift;
+                //MessageBox.Show($"< {shift} : {pixelDifference}");
+            }
 
             int spritesheetWidth = columnCount * imageWidth;
             int spritesheetHeight = rowCount * imageHeight;

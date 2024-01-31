@@ -212,7 +212,7 @@ namespace Seq2Sheet
             averageCropX += final.Width;
             averageCropY += final.Height;
 
-            form.fileList.Items[index] = $"{currentWidth}x{currentHeight}";
+            // form.fileList.Items[index] = $"{currentWidth}x{currentHeight}";
 
             // Create and return the Rectangle
             return final;

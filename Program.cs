@@ -115,7 +115,9 @@ namespace Seq2Sheet
             {
                 FileStream fs = (FileStream)saveDialog.OpenFile();
 
-                GenerateSpritesheet().Save(fs, ImageFormat.Png);
+                Bitmap spriteSheet = GenerateSpritesheet();
+                spriteSheet.Save(fs, ImageFormat.Png);
+                spriteSheet.Dispose();
 
                 fs.Close();
                 fs.Dispose();
@@ -124,20 +126,16 @@ namespace Seq2Sheet
 
         private static Bitmap GenerateSpritesheet()
         {
-            //return images[form.fileList.SelectedIndex] as Bitmap;
             int imageCount = images.Length;
 
-            // Calculate the column count and row count for an even distribution
-            int columnCount = (int)Math.Ceiling(Math.Sqrt(imageCount));
+            // Calculate the column count and row count for a square-ish distribution
+            int columnCount = (int)Math.Floor(Math.Sqrt(imageCount));
             int rowCount = (int)Math.Ceiling((double)imageCount / columnCount);
-
-            // Adjust column count to ensure it is not more than 10 (you can change this limit as needed)
-            columnCount = Math.Min(columnCount, 10);
 
             int spritesheetWidth = columnCount * imageWidth;
             int spritesheetHeight = rowCount * imageHeight;
 
-            Bitmap bmp = new(spritesheetWidth, spritesheetHeight);
+            Bitmap bmp = new Bitmap(spritesheetWidth, spritesheetHeight);
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
@@ -156,6 +154,7 @@ namespace Seq2Sheet
 
             return bmp;
         }
+
 
         static Rectangle GetNonAlphaBoundingBox(Bitmap image, int index, Rectangle compare)
         {
@@ -203,10 +202,10 @@ namespace Seq2Sheet
             image.UnlockBits(bmpData);
 
             // Calculate width and height of the bounding box
-            int width = maxX - minX + 1;
-            int height = maxY - minY + 1;
-            int currentWidth = currentMaxX - currentMinX + 1;
-            int currentHeight = currentMaxY - currentMinY + 1;
+            int width = maxX - minX;
+            int height = maxY - minY;
+            int currentWidth = currentMaxX - currentMinX;
+            int currentHeight = currentMaxY - currentMinY;
 
             Rectangle final = new Rectangle(minX, minY, width, height);
 
